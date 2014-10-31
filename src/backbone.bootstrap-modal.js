@@ -36,10 +36,10 @@
       <div class="modal-footer">\
         <% if (allowCancel) { %>\
           <% if (cancelText) { %>\
-            <a href="#" class="btn cancel">{{cancelText}}</a>\
+            <button type="button" class="btn cancel btn-default">{{cancelText}}</button>\
           <% } %>\
         <% } %>\
-        <a href="#" class="btn ok btn-primary">{{okText}}</a>\
+        <button type="button" class="btn ok btn-primary">{{okText}}</button>\
       </div>\
     <% } %>\
     </div></div>\
