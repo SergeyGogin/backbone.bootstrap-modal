@@ -11,6 +11,7 @@
  * hidden: Fired when the modal has finished animating out
  * cancel: The user dismissed the modal
  * ok: The user clicked OK
+ * delete: The user clicked Delete
  */
 (function($, _, Backbone) {
 
@@ -34,6 +35,9 @@
     <div class="modal-body">{{content}}</div>\
     <% if (showFooter) { %>\
       <div class="modal-footer">\
+        <% if (allowDelete) { %>\
+            <button type="button" class="btn btn-danger pull-left delete">{{deleteText}}</button>\
+        <% } %>\
         <% if (allowCancel) { %>\
           <% if (cancelText) { %>\
             <button type="button" class="btn cancel btn-default">{{cancelText}}</button>\
@@ -85,6 +89,19 @@
           this.close();
         }
       },
+      'click .delete': function (event) {
+        event.preventDefault();
+
+        this.trigger('delete');
+
+        if (this.options.content && this.options.content.trigger) {
+          this.options.content.trigger('delete', this);
+        }
+
+        if (this.options.okCloses) {
+          this.close();
+        }
+      },
       'keypress': function(event) {
         if (this.options.enterTriggersOk && event.which == 13) {
           event.preventDefault();
@@ -111,8 +128,10 @@
      * @param {String|View} [options.content]     Modal content. Default: none
      * @param {String} [options.title]            Title. Default: none
      * @param {String} [options.okText]           Text for the OK button. Default: 'OK'
-     * @param {String} [options.cancelText]       Text for the cancel button. Default: 'Cancel'. If passed a falsey value, the button will be removed
+     * @param {String} [options.cancelText]       Text for the Cancel button. Default: 'Cancel'. If passed a falsey value, the button will be removed
+     * @param {String} [options.deleteText]       Text for the Delete button. Default: 'Delete'
      * @param {Boolean} [options.allowCancel]     Whether the modal can be closed, other than by pressing OK. Default: true
+     * @param {Boolean} [options.allowDelete]     Whether the modal has Delete button. Default: false
      * @param {Boolean} [options.escape]          Whether the 'esc' key can dismiss the modal. Default: true, but false if options.cancellable is true
      * @param {Boolean} [options.animate]         Whether to animate in/out. Default: false
      * @param {Function} [options.template]       Compiled underscore template to override the default one
@@ -125,8 +144,10 @@
         focusOk: true,
         okCloses: true,
         cancelText: 'Cancel',
+        deleteText: 'Delete',
         showFooter: true,
         allowCancel: true,
+        allowDelete: false,
         escape: true,
         animate: false,
         template: template,
